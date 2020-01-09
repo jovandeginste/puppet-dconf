@@ -21,7 +21,7 @@ define dconf::configuration (
     $absolute =  "${root}/${subelement}"
 
     $sanitized_absolute = regsubst(regsubst(regsubst(
-      $absolute, /\/\//, '/', 'G'),
+      $absolute, /\/+/, '/', 'G'),
       /^\//, '', 'G'),
       /\/$/, '', 'G')
 
