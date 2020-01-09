@@ -27,9 +27,9 @@ define dconf::profile (
   }
   $system_db_lines = prefix($all_system_dbs, 'systemdb:')
 
-  $all_db_lines = delete_undef_values([$user_db_line, $service_db_line] + $system_db_lines)
+  $all_db_lines = delete_undef_values([$user_db_line, $service_db_line] + $system_db_lines + [""])
 
-  $content = join($all_db_lines, "\n") + "\n"
+  $content = join($all_db_lines, "\n")
 
   file { $profile_file:
     ensure  => $ensure,
