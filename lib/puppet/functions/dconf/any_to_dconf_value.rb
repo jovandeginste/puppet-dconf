@@ -5,10 +5,6 @@ Puppet::Functions.create_function(:'dconf::any_to_dconf_value') do
   end
 
   def any_to_dconf_value(something)
-    if something.is_a?(String) && something[0] == "="
-      return something
-    end
-
-    something.inspect
+    something.inspect.gsub(/"=([^"]*)"/, '\1')
   end
 end
