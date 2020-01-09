@@ -5,8 +5,13 @@
   "summary": "Manage dconf settings",
   "license": "Apache-2.0",
   "source": "https://github.com/jovandeginste/puppet-dconf",
+  "project_page": "https://github.com/jovandeginste/puppet-dconf",
+  "issues_url": "https://github.com/jovandeginste/puppet-dconf/issues",
   "dependencies": [
-
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 6.0.0 < 7.0.0"
+    }
   ],
   "operatingsystem_support": [
     {
