@@ -6,26 +6,29 @@
 #   dconf::configuration { 'namevar': }
 define dconf::configuration (
   Hash[String, Hash[String, Any]] $configuration,
-  String $file = $name,
+  String $root = $name,
   String $database = 'site',
   Enum['present', 'absent'] $ensure = 'present',
 ) {
   include ::dconf::update
 
-  $safe_filename = regsubst($file, /[^[:alnum:]+]/, '_', 'G')
+  $safe_filename = regsubst($name, /[^[:alnum:]+]/, '_', 'G')
   $filename = "/etc/dconf/db/${database}.d/${safe_filename}"
 
   $ini_configuration = $configuration.reduce({}) |$cumulate, $element| {
     $subelement = $element[0]
     $sub_configuration = $element[1]
-    $absolute = $subelement ? {
-      '/'     => $name,
-      default => "${name}/${subelement}",
-    }
+    $absolute =  "${root}/${subelement}"
+
+    $sanitized_absolute = regsubst(regsubst(regsubst(
+      $absolute, /\/\//, '/', 'G'),
+      /^\//, '', 'G'),
+      /\/$/, '', 'G')
+
     $parsed_configuration = $sub_configuration.map |$key, $value| {
       [$key, dconf::any_to_dconf_value($value)]
     }
-    $cumulate.merge({$absolute => $parsed_configuration})
+    $cumulate.merge({$sanitized_absolute => $parsed_configuration})
   }
 
   $ini_settings = {
