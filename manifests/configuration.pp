@@ -16,7 +16,9 @@ define dconf::configuration (
   $filename = "/etc/dconf/db/${database}.d/${safe_filename}"
 
   $ini_configuration = {
-    $name => dconf::any_to_dconf_value($configuration),
+    $name => $configuration.map |$key, $value| {
+      [$key, dconf::any_to_dconf_value($value)]
+    },
   }
   $ini_settings = {
     'quote_char' => '',
