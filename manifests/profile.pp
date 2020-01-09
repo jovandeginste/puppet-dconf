@@ -12,7 +12,6 @@ define dconf::profile (
   Array[String] $system_dbs = [],
   Stdlib::Absolutepath $dconf_profile_dir = '/etc/dconf/profile'
 ) {
-
   $all_system_dbs = unique([$system_db] + $system_dbs)
   $profile_file = "${dconf_profile_dir}/${name}"
 
@@ -30,7 +29,7 @@ define dconf::profile (
 
   $all_db_lines = delete_undef_values([$user_db_line, $service_db_line] + $system_db_lines)
 
-  $content = join($all_db_lines, "\n")
+  $content = join($all_db_lines, "\n") + "\n"
 
   file { $profile_file:
     ensure  => $ensure,
