@@ -14,8 +14,9 @@ define dconf::configuration (
 
   $safe_filename = regsubst($file, /[^[:alnum:]+]/, '_', 'G')
   $filename = "/etc/dconf/db/${database}.d/${safe_filename}"
+
   $ini_configuration = {
-    $name => $configuration,
+    $name => dconf::any_to_dconf_value($configuration),
   }
   $ini_settings = {
     'quote_char' => '',
