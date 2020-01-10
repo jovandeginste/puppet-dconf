@@ -53,5 +53,6 @@ define dconf::configuration (
   file { $locked_filename:
     ensure => $locked_present,
     target => $filename,
+    notify  => Class['dconf::update'],
   }
 }
