@@ -10,10 +10,10 @@ define dconf::profile (
   Optional[String] $service_db = undef,
   Optional[String] $system_db = undef,
   Array[String] $system_dbs = [],
-  Stdlib::Absolutepath $dconf_profile_dir = '/etc/dconf/profile'
+  Stdlib::Absolutepath $dconf_config_dir = '/etc/dconf'
 ) {
   $all_system_dbs = unique([$system_db] + $system_dbs)
-  $profile_file = "${dconf_profile_dir}/${name}"
+  $profile_file = "${dconf_config_dir}/profile/${name}"
 
   if $user_db {
     $user_db_line = "user-db:${user_db}"
@@ -34,5 +34,14 @@ define dconf::profile (
   file { $profile_file:
     ensure  => $ensure,
     content => $content,
+  }
+  file { [
+    "${dconf_config_dir}/db/${name}.d",
+    "${dconf_config_dir}/db/${name}.d/lock",
+  ]:
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 }

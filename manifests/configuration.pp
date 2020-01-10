@@ -9,6 +9,7 @@ define dconf::configuration (
   String $root = $name,
   String $database = 'site',
   Enum['present', 'absent'] $ensure = 'present',
+  Boolean $locked = false,
 ) {
   include ::dconf::update
 
