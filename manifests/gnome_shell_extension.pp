@@ -14,8 +14,8 @@ define dconf::gnome_shell_extension (
   include ::dconf::enable_gnome_shell_extensions
   dconf::configuration { $name:
     ensure        => $ensure,
-    configuration => $configuration,
-    file          => $name,
+    configuration => { $name => $configuration},
+    root          => 'org/gnome/shell/extensions',
     database      => $database,
   }
 

@@ -7,6 +7,6 @@
 class dconf::enable_gnome_shell_extensions {
   datacat { 'enabled-gnome-shell-extensions':
     path     => '/etc/dconf/db/site.d/enabled-gnome-shell-extensions',
-    template => 'profile/desktop/gnome_shell/enabled-gnome-shell-extensions.ini.erb',
+    template => 'dconf/enabled-gnome-shell-extensions.ini.erb',
   }
 }
