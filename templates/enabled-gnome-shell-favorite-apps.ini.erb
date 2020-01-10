@@ -1,0 +1,4 @@
+# THIS FILE IS CONTROLLED BY PUPPET
+<% enabled_favorite_apps = @data.select { |name, enabled| enabled }.keys.sort %>
+[org/gnome/shell]
+favorite-apps=<%= enabled_favorite_apps.inspect %>
