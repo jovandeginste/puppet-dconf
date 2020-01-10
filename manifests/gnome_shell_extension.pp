@@ -5,16 +5,24 @@
 # @example
 #   dconf::gnome_shell_extension { 'namevar': }
 define dconf::gnome_shell_extension (
-  Hash[String, Any] $configuration,
+  Hash[String, Any] $configuration = {},
   Enum['present', 'absent'] $ensure = 'present',
   Optional[String] $database = undef,
-  Boolean $lockdown = false,
   Boolean $enabled = true,
 ) {
   include ::dconf::enable_gnome_shell_extensions
+
+  [$extension_name, $extension_author] = split($name, '@')
+
+  if empty($configuration) {
+    $dconf_file_ensure = 'absent'
+  } else {
+    $dconf_file_ensure = $ensure
+  }
+
   dconf::configuration { $name:
-    ensure        => $ensure,
-    configuration => { $name => $configuration},
+    ensure        => $dconf_file_ensure,
+    configuration => { $extension_name => $configuration },
     root          => 'org/gnome/shell/extensions',
     database      => $database,
   }
