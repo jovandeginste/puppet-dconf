@@ -35,13 +35,18 @@ define dconf::profile (
     ensure  => $ensure,
     content => $content,
   }
-  file { [
-    "${dconf_config_dir}/db/${name}.d",
-    "${dconf_config_dir}/db/${name}.d/locks",
-  ]:
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
+
+  if $ensure == 'present' {
+    $all_system_dbs.each |$db| {
+      file { [
+        "${dconf_config_dir}/db/${db}.d",
+        "${dconf_config_dir}/db/${db}.d/locks",
+      ]:
+        ensure => directory,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+      }
+    }
   }
 }
