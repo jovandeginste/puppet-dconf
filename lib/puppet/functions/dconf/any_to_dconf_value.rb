@@ -5,6 +5,6 @@ Puppet::Functions.create_function(:'dconf::any_to_dconf_value') do
   end
 
   def any_to_dconf_value(something)
-    something.inspect.gsub(/"=([^"]*)"/, '\1')
+    something.inspect.gsub(%r{"=([^"]*)"}, '\1')
   end
 end
