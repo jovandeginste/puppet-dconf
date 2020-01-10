@@ -15,6 +15,13 @@ define dconf::configuration (
 
   $safe_filename = regsubst($name, /[^[:alnum:]+]/, '_', 'G')
   $filename = "/etc/dconf/db/${database}.d/${safe_filename}"
+  $locked_filename = "/etc/dconf/db/${database}.d/locks/${safe_filename}"
+
+  if $locked {
+    $locked_present = 'link'
+  } else {
+    $locked_present = 'absent'
+  }
 
   $ini_configuration = $configuration.reduce({}) |$cumulate, $element| {
     $subelement = $element[0]
@@ -26,10 +33,10 @@ define dconf::configuration (
       /^\//, '', 'G'),
       /\/$/, '', 'G')
 
-    $parsed_configuration = $sub_configuration.map |$key, $value| {
-      [$key, dconf::any_to_dconf_value($value)]
-    }
-    $cumulate.merge({$sanitized_absolute => $parsed_configuration})
+      $parsed_configuration = $sub_configuration.map |$key, $value| {
+        [$key, dconf::any_to_dconf_value($value)]
+      }
+      $cumulate.merge({$sanitized_absolute => $parsed_configuration})
   }
 
   $ini_settings = {
@@ -41,5 +48,10 @@ define dconf::configuration (
     ensure  => $ensure,
     content => $content,
     notify  => Class['dconf::update'],
+  }
+
+  file { $locked_filename:
+    ensure => $locked_present,
+    target => $filename,
   }
 }

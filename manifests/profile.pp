@@ -37,7 +37,7 @@ define dconf::profile (
   }
   file { [
     "${dconf_config_dir}/db/${name}.d",
-    "${dconf_config_dir}/db/${name}.d/lock",
+    "${dconf_config_dir}/db/${name}.d/locks",
   ]:
     ensure => directory,
     owner  => 'root',
