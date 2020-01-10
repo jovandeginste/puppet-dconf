@@ -7,7 +7,7 @@
 define dconf::configuration (
   Hash[String, Hash[String, Any]] $configuration,
   String $root = $name,
-  String $database = 'site',
+  String $database = 'local',
   Enum['present', 'absent'] $ensure = 'present',
   Boolean $locked = false,
 ) {

@@ -6,7 +6,7 @@
 #   include dconf::enable_gnome_shell_favorite_apps
 class dconf::enable_gnome_shell_favorite_apps {
   datacat { 'enabled-gnome-shell-favorite_apps':
-    path     => '/etc/dconf/db/site.d/enabled-gnome-shell-favorite-apps',
+    path     => '/etc/dconf/db/local.d/enabled-gnome-shell-favorite-apps',
     template => 'dconf/enabled-gnome-shell-favorite-apps.ini.erb',
     notify   => Class['dconf::update'],
   }
