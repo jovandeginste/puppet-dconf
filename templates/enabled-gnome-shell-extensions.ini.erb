@@ -1,4 +1,4 @@
 # THIS FILE IS CONTROLLED BY PUPPET
-<% enabled_extensions = @data.select { |name, enabled| enabled }.keys %>
+<% enabled_extensions = @data.select { |name, enabled| enabled }.keys.sort %>
 [org/gnome/shell]
 enabled-extensions=<%= enabled_extensions.inspect %>
