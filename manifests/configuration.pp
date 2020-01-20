@@ -18,7 +18,7 @@ define dconf::configuration (
   $locked_filename = "/etc/dconf/db/${database}.d/locks/${safe_filename}"
 
   if $locked {
-    $locked_present = 'link'
+    $locked_present = 'file'
   } else {
     $locked_present = 'absent'
   }
@@ -26,7 +26,7 @@ define dconf::configuration (
   $ini_configuration = $configuration.reduce({}) |$cumulate, $element| {
     $subelement = $element[0]
     $sub_configuration = $element[1]
-    $absolute =  "${root}/${subelement}"
+    $absolute = "${root}/${subelement}"
 
     $sanitized_absolute = regsubst(regsubst(regsubst(
       $absolute, /\/+/, '/', 'G'),
@@ -37,6 +37,14 @@ define dconf::configuration (
         [$key, dconf::any_to_dconf_value($value)]
       }
       $cumulate.merge({$sanitized_absolute => $parsed_configuration})
+  }
+
+  $locked_content = $configuration.reduce([]) |$cumulate, $element| {
+    $subelement = $element[0]
+    $sub_configuration = $element[1]
+    $absolute = "/${root}/${subelement}/"
+    $parsed_configuration = prefix(keys($sub_configuration), $absolute)
+    $cumulate + $parsed_configuration
   }
 
   $ini_settings = {
@@ -50,9 +58,16 @@ define dconf::configuration (
     notify  => Class['dconf::update'],
   }
 
+  $locked_content_exp = [
+    '# This file is managed by Puppet',
+    '',
+    sort($locked_content),
+    '',
+  ]
+
   file { $locked_filename:
-    ensure => $locked_present,
-    target => $filename,
+    ensure  => $locked_present,
+    content => join($locked_content_exp, "\n"),
     notify  => Class['dconf::update'],
   }
 }
